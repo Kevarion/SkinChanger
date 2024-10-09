@@ -1,0 +1,6 @@
+name: SkinChanger
+version: '1.0'
+main: net.kevarion.skinChanger.SkinChanger
+api-version: '1.21'
+authors: [ Kevarion ]
+description: An in-game skin changer plugin
