@@ -21,8 +21,8 @@ import java.util.List;
 @CommandAlias("skin")
 public class SkinCommand extends BaseCommand {
 
-    private static final String PROFILE_URL = "https://api.mojang.com/users/profiles/minecraft/";
-    private static final String SKIN_URL = "https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false";
+    private static String PROFILE_URL = "https://api.mojang.com/users/profiles/minecraft/";
+    private static String SKIN_URL = "https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false";
 
     @Default
     public void main(Player player, String[] args) {
@@ -32,8 +32,8 @@ public class SkinCommand extends BaseCommand {
             return;
         }
 
-        final String targetSkin = args[0];
-        final PlayerProfile playerProfile = (PlayerProfile) player.getPlayerProfile();
+        String targetSkin = args[0];
+        PlayerProfile playerProfile = (PlayerProfile) player.getPlayerProfile();
         playerProfile.setProperties(getTextureProperty(targetSkin));
         player.setPlayerProfile(playerProfile);
 
@@ -42,22 +42,22 @@ public class SkinCommand extends BaseCommand {
     }
 
     private Collection<ProfileProperty> getTextureProperty(String targetSkin) {
-        final String profileResponse = makeRequest(PROFILE_URL + targetSkin);
-        final JsonObject profileObject = JsonParser.parseString(profileResponse).getAsJsonObject();
-        final String uuid = profileObject.get("id").getAsString();
+        String profileResponse = makeRequest(PROFILE_URL + targetSkin);
+        JsonObject profileObject = JsonParser.parseString(profileResponse).getAsJsonObject();
+        String uuid = profileObject.get("id").getAsString();
 
-        final String skinResponse = makeRequest(SKIN_URL.formatted(uuid));
-        final JsonObject skinObject = JsonParser.parseString(skinResponse).getAsJsonObject().get("properties").getAsJsonArray().get(0).getAsJsonObject();
-        final String value = skinObject.get("value").getAsString();
-        final String signature = skinObject.get("signature").getAsString();
+        String skinResponse = makeRequest(SKIN_URL.formatted(uuid));
+        JsonObject skinObject = JsonParser.parseString(skinResponse).getAsJsonObject().get("properties").getAsJsonArray().get(0).getAsJsonObject();
+        String value = skinObject.get("value").getAsString();
+        String signature = skinObject.get("signature").getAsString();
 
         return List.of(new ProfileProperty("textures", value, signature));
     }
 
     private String makeRequest(String url) {
-        try (final HttpClient httpClient = HttpClient.newBuilder().build()) {
-            final HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).build();
-            final HttpResponse<String> response = HttpClient.newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        try (HttpClient httpClient = HttpClient.newBuilder().build()) {
+            HttpRequest httpRequest = HttpRequest.newBuilder().uri(URI.create(url)).build();
+            HttpResponse<String> response = HttpClient.newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString());
             return response.body();
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
