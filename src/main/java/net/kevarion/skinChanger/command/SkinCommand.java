@@ -37,7 +37,7 @@ public class SkinCommand extends BaseCommand {
         playerProfile.setProperties(getTextureProperty(targetSkin));
         player.setPlayerProfile(playerProfile);
 
-        player.sendMessage(ChatColor.GREEN + "You have changed your skin to " + targetSkin + "'s skin!");
+        player.sendMessage(ChatColor.GREEN + "You have changed your skin to " + targetSkin.toUpperCase() + "'s skin!");
 
     }
 
